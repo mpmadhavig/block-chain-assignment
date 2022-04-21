@@ -95,6 +95,37 @@ public final class AssetTransfer implements ContractInterface {
     }
 
     /**
+     * Creates a new asset on the ledger.
+     *
+     * @param ctx the transaction context
+     * @param assetID the ID of the new asset
+     * @param owner the owner of the new asset
+     * @param appraisedValue the appraisedValue of the new asset
+     * @return the created asset
+     */
+    @Transaction(intent = Transaction.TYPE.SUBMIT)
+    public Asset DuplicateAsset(final Context ctx, final String assetID, final String newOwner) {
+        ChaincodeStub stub = ctx.getStub();
+
+        Asset asset = ReadAsset(ctx, assetID);
+        String newAssetID = "duplicated_" + asset.getAssetID();
+        Asset duplicatedAsset = CreateAsset(
+            ctx, 
+            newAssetID, 
+            asset.getColor(), 
+            asset.getSize(), 
+            newOwner, 
+            asset.getAppraisedValue()
+        );
+        
+        //Use Genson to convert the Asset into string, sort it alphabetically and serialize it into a json string
+        String sortedJson = genson.serialize(duplicatedAsset);
+        stub.putStringState(newAssetID, sortedJson);
+
+        return duplicatedAsset;
+    }
+
+    /**
      * Retrieves an asset with the specified ID from the ledger.
      *
      * @param ctx the transaction context

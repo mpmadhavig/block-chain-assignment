@@ -99,9 +99,8 @@ public final class AssetTransfer implements ContractInterface {
      *
      * @param ctx the transaction context
      * @param assetID the ID of the new asset
-     * @param owner the owner of the new asset
-     * @param appraisedValue the appraisedValue of the new asset
-     * @return the created asset
+     * @param newOwner the new owner of the new asset
+     * @return the duplicated asset
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
     public Asset DuplicateAsset(final Context ctx, final String assetID, final String newOwner) {
